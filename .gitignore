@@ -1,0 +1,13 @@
+# IDE
+.idea
+
+# Transitional
+revision_hash
+
+# Compilations
+*.pyc
+
+junk*
+
+venv
+.venv
