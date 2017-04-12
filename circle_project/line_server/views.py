@@ -14,7 +14,7 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 
-def get_text_file(request):
+def pre_process_text(request):
     initial_count = LineText.objects.count()
 
     if initial_count == 0:
@@ -22,6 +22,7 @@ def get_text_file(request):
         line_text_list = []
         with open(FILE_PATH) as f:
             for idx, line in enumerate(f):
+                # todo: consider compressing the line_text
                 lt = LineText(line_num=idx, line_text=line)
                 line_text_list.append(lt)
 
@@ -39,3 +40,22 @@ def get_text_file(request):
 
     else:
         return HttpResponse("Already initialized.")
+
+
+def get_line(request, line_num):
+    line_num = int(line_num)
+    total = LineText.objects.count()
+    if line_num > total:
+        return HttpResponse("Out of bound. Total {} lines.".format(total), status=413)
+
+    try:
+        lt = LineText.objects.get(line_num=line_num)
+    except LineText.DoesNotExist as e:
+        pass
+
+    text = lt.line_text
+    return HttpResponse(text)
+
+
+
+
