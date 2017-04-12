@@ -20,9 +20,9 @@ There are different approaches to solve this problem. From easy to advanced solu
 
 1. When the file size < 1Gb, and there are not too many requirements(**uptime**, **server failure**, etc), it's feasible to just read all lines to a local array. The index of the array will represent the line number.  
 	* pros: easy and feasible.
-	* cons: The modern web application should be stateless, which is good for **_scalability_** and **_robust_**. When the server is down(loal variable will be gone), or need to server bigger file, this approach will not meet the needs.
+	* cons: The modern web application should be stateless, which is good for **_scalability_** and **_robust_**. When the server is down(loal variable will be gone), or need to serve bigger file, this approach will not meet the needs.
 	
-2. When the file is really big(1G ~ 100G), we can preprocess the file and devide the single big file to separate smaller files with fixed number of lines. We can use a in-memory dict/hashtable to store the filename-line_range mapping.
+2. When the file is really big(1G ~ 100G), we can preprocess the file and divide the single big file to separate smaller files with fixed number of lines. We can use an in-memory dict/hashtable to store the filename-line_range mapping.
 	* pros: a single server can handle a really big file.
 	* cons: still need to find lines in any smaller file chunck.
 	* improvements: 
@@ -52,9 +52,9 @@ Different approaches will handle the file quite differently, like described abov
 
 The bottlenecks for high QPS mainly exist in 2 places: 
 
-1. The python application server. In real prod situation, we use Gunicorn with ~10 workers to serve python application. A single Gunicorn server can handle 100 QPS easily. Since in the question, the access load of 100, 10k or 1000k users may distribute evenly in a day. Consider 100 QPS, this equals to 100 * 60 * 60= 360k, which means with a single gunicorn server, it can handle 360k users in a hour. With more traffic, we can just add more gunicorn nodes after a load balance, like nginx. The 3 nodes can handle 1000k users.
+1. The python application server. In real prod situation, we use Gunicorn with ~10 workers to serve python application. A single Gunicorn server can handle 100 QPS easily. Since in the question, the access load of 100, 10k or 1000k users may distribute evenly in a day. Consider 100 QPS, this equals to 100 * 60 * 60= 360k, which means with a single gunicorn server, it can handle 360k users in an hour. With more traffic, we can just add more gunicorn nodes after a load balance, like nginx. The 3 nodes can handle 1000k users.
 
-2. IO servers. First, we can have more replicas to server the  data; Then, we can use in-memory db to serve the data.
+2. IO servers. First, we can have more replicas to server the  data(since there is only read action in io server, we have no problem of replica data sync); Then, we can use in-memory db to serve the data.
 
 For extreme high QPS situation, there is another solution to solve the problem. As we know, nginx is really good at serving static data. Considering our file is also immutable, we can let the nignx serve it directly.
 
@@ -70,7 +70,7 @@ There is project called `OpenResty`. We can write lua script to control our busi
 
 ### What third-party libraries or other tools does the system use? How did you choose each library or framework you used?
 
-I use django to build to api. Even though it seems a little heavy to complete a small task using django, it's fast to have a working version, considering my django background.
+I use django to build the api. Even though it seems a little heavy to complete a small task using django, it's fast to have a working version, considering my django background.
 
 ### How long did you spend on this exercise? If you had unlimited more time to spend on this, how would you spend it and how would you prioritize each item?
 
