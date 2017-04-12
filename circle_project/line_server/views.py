@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
-from django.shortcuts import render
 from django.http import HttpResponse
-import requests
 import os
 from django.conf import settings
 from .models import LineText
 
 # TEXT_URL = "http://www.gutenberg.org/cache/epub/3300/pg3300.txt"
 
+
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+    return HttpResponse("Hello, world. You're at the index.")
 
 
+# endpoint for manually triggering pre_process
 def pre_process_text(request):
     initial_count = LineText.objects.count()
 
@@ -23,6 +22,7 @@ def pre_process_text(request):
         with open(FILE_PATH) as f:
             for idx, line in enumerate(f):
                 # todo: consider compressing the line_text
+                # in average, after compression text size will be 1/3 of original
                 lt = LineText(line_num=idx, line_text=line)
                 line_text_list.append(lt)
 
